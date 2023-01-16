@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -34,6 +35,7 @@ class CrudApplicationTests {
 	void init() {
 		userService = new UserService(userRepository);
 		this.user = new User();
+		user.setId(1);
 		user.setName("teste");
 		user.setEmail("teste@email.com");
 		user.setPassword("123");
@@ -43,6 +45,7 @@ class CrudApplicationTests {
 
 		Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
 		Mockito.when(userRepository.findAll()).thenReturn(users);
+		Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 	}
 
 	@Test
@@ -58,5 +61,19 @@ class CrudApplicationTests {
 		List<UserDTO> expected = userService.findUsers();
 
 		Assertions.assertEquals(expected.get(0).getEmail(),user.getEmail());
+	}
+
+	@Test
+	public void deleteUserById() {
+		UserDTO expected = userService.deleteUserById(1);
+
+		Assertions.assertEquals(expected.getEmail(),user.getEmail());
+	}
+
+	@Test
+	public void deleteUserByIdNotFound() {
+
+		RuntimeException exception = Assertions.assertThrows(RuntimeException.class,() -> userService.deleteUserById(2));
+		Assertions.assertEquals("User not found",exception.getMessage());
 	}
 }
