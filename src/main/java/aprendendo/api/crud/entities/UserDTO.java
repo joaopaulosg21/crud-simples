@@ -11,6 +11,8 @@ public class UserDTO {
         this.email = user.getEmail();
     }
 
+    public UserDTO() {}
+
     public long getId() {
         return id;
     }
