@@ -2,6 +2,7 @@ package aprendendo.api.crud.controller;
 
 import aprendendo.api.crud.entities.User;
 import aprendendo.api.crud.entities.UserDTO;
+import aprendendo.api.crud.entities.UserUpdateDTO;
 import aprendendo.api.crud.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,5 +31,10 @@ public class UserController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<UserDTO> deleteUser(@PathVariable long id) {
         return ResponseEntity.ok(userService.deleteUserById(id));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable long id, @RequestBody UserUpdateDTO userUpdateDTO) {
+        return ResponseEntity.ok(userService.updateUserById(id,userUpdateDTO));
     }
 }

@@ -2,8 +2,10 @@ package aprendendo.api.crud;
 
 import aprendendo.api.crud.entities.User;
 import aprendendo.api.crud.entities.UserDTO;
+import aprendendo.api.crud.entities.UserUpdateDTO;
 import aprendendo.api.crud.repository.UserRepository;
 import aprendendo.api.crud.service.UserService;
+import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,9 +15,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +73,25 @@ class CrudApplicationTests {
 	public void deleteUserByIdNotFound() {
 
 		RuntimeException exception = Assertions.assertThrows(RuntimeException.class,() -> userService.deleteUserById(2));
+		Assertions.assertEquals("User not found",exception.getMessage());
+	}
+
+	@Test
+	public void updateUserById() {
+		UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+		userUpdateDTO.setName("update");
+
+		UserDTO expected = userService.updateUserById(1,userUpdateDTO);
+
+		Assertions.assertEquals(expected.getName(),user.getName());
+	}
+
+	@Test
+	public void updateUserByIdNotFound() {
+		UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+		userUpdateDTO.setName("update");
+
+		RuntimeException exception = Assertions.assertThrows(RuntimeException.class,() -> userService.updateUserById(2,userUpdateDTO));
 		Assertions.assertEquals("User not found",exception.getMessage());
 	}
 }
